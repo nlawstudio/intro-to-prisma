@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum ResourceType {
+  VIDEO
+  BLOG_POST
+  BOOK
+}
+
+model Resource {
+  uuid        String       @id @default(uuid())
+  name        String
+  description String
+  url         String
+  tags        String[]
+  type        ResourceType
+  topicUuid   String?
+  Topic       Topic?       @relation(fields: [topicUuid], references: [uuid])
+}
+
+model Topic {
+  uuid        String     @id @default(uuid())
+  name        String
+  resources   Resource[]
+  description String
+}
